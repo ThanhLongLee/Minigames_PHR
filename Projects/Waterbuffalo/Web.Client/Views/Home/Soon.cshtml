@@ -1,0 +1,156 @@
+﻿
+@{
+    ViewBag.Title = "Soon";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="~/lib/css/soon.css">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src=@Html.FormatValue("https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js", null)></script>
+<script src="https://unpkg.com/tonweb@0.0.66/dist/tonweb.js"></script>
+<script>
+    $(document).ready(function () {
+        const user = {
+            Id: Telegram.WebApp.initDataUnsafe.user.id,
+            Firstname: Telegram.WebApp.initDataUnsafe.user.first_name,
+            Lastname: Telegram.WebApp.initDataUnsafe.user.last_name,
+            Username: Telegram.WebApp.initDataUnsafe.user.username
+        };
+
+        var tonConnectUI;
+        var appName = "Minigames Ragdoll";
+
+        $(function () {
+            // Khởi tạo TonConnectUI với manifest URL
+            tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+                manifestUrl: 'https://minigames-phr.s3.ap-southeast-1.amazonaws.com/tonconnect-manifest.json',
+            });
+
+            // Cài đặt tùy chọn cho giao diện
+            tonConnectUI.uiOptions = {
+                twaReturnUrl: 'https://t.me/Propertyhero_bot/PHR_app'
+            };
+
+            // Kiểm tra kết nối ví khi khởi động
+            checkWalletConnection();
+
+            // Đăng ký sự kiện khi trạng thái ví thay đổi
+            const unsubscribe = tonConnectUI.onStatusChange(walletAndwalletInfo => {
+                if (walletAndwalletInfo) {
+                    handleWalletConnect(walletAndwalletInfo.account);
+                } else {
+                    handleWalletDisconnection();
+                }
+            });
+
+            // Xử lý sự kiện click nút Connect/Disconnect
+            $("#btnTONConnect").click(function () {
+                handleWalletAction();
+            });
+        });
+
+        // Kiểm tra kết nối ví
+        function checkWalletConnection() {
+            if (tonConnectUI.account?.address) {
+                handleWalletConnect(tonConnectUI.account);
+            } else {
+                showConnectButton(); // Hiển thị nút connect
+            }
+        }
+
+        async function handleWalletAction() {
+            // Kiểm tra nội dung của nút để quyết định hành động
+            if ($("#btnTONConnect").text().trim() === "Connect Wallet") {
+                await tonConnectUI.openModal(); // Mở modal kết nối ví
+            } else {
+                await tonConnectUI.disconnect(); // Ngắt kết nối ví
+            }
+        }
+
+        function handleWalletConnect(walletInfo) {
+            const address = walletInfo.address;
+            const walletName = walletInfo.name;
+            const formatAddress = new TonWeb.utils.Address(address);
+
+            const shortAddress = formatAddress.toString(true, true, true, true);
+            const displayAddress = shortAddress.substring(0, 5) + '...' + shortAddress.substring(shortAddress.length - 8);
+
+            $("#btnTONConnect")
+                .text(displayAddress)
+                .css({
+                    "color": "black",
+                    "border": "1px solid black",
+                    "background-color": "#f4da33"
+                })
+                .show(); // Hiển thị địa chỉ ví ngắn
+            $("#btnTONConnect").off("click").click(async function () {
+                await tonConnectUI.disconnect(); // Ngắt kết nối khi nhấp vào địa chỉ
+            });
+
+            // Gọi AJAX để lưu thông tin ví vào CSDL
+            $.ajax({
+                type: "POST",
+                url: "/Home/ConnectWallet",
+                contentType: 'application/json',
+                data: JSON.stringify({ userId: user.Id, walletAddress: shortAddress, exchangeName: walletName }),
+                success: function (response) {
+                    console.log("Connected successfully.");
+                },
+                error: function (error) {
+                    console.log("Error connecting wallet.");
+                }
+            });
+        }
+
+        async function handleWalletDisconnection() {
+            showConnectButton(); // Hiển thị lại nút connect
+
+            // Gọi AJAX để ngắt kết nối
+            $.ajax({
+                type: "POST",
+                url: "/Home/DisconnectWallet",
+                contentType: 'application/json',
+                data: JSON.stringify({ userId: user.Id }),
+                success: function (response) {
+                    console.log("Disconnected successfully.");
+                },
+                error: function (error) {
+                    console.log("Error disconnecting wallet.");
+                }
+            });
+            location.reload();
+        }
+
+        // Hiển thị nút kết nối
+        function showConnectButton() {
+            $("#btnTONConnect")
+                .text("Connect Wallet")
+                .css({
+                    "color": "#486bf6",
+                    "border": "1px solid #486bf6",
+                    "background-color": "white"
+                })
+                .show(); // Đặt nội dung nút là "Connect"
+        }
+
+        // Gán sự kiện click cho nút connect
+        $("#btnTONConnect").click(function () {
+            handleWalletAction(); // Gọi hàm xử lý khi nhấp vào nút
+        });
+    });
+</script>
+<div class="bg-gradient-to-t bg_image flex justify-center min-h-screen">
+    <div class="flex flex-col items-center justify-center w-full h-full relative z-10">
+        <h4 class="text-center mt-[30px] title">BIG LISTING<br>COMING SOON</h4>
+        <div class="relative">
+            <!-- Thêm div bọc để quản lý vị trí -->
+            <img src="~/lib/img/soon_main.png" alt="Alternate Text" class="mt-2 w-[80%] sm:w-[50%] mx-auto soon-img" />
+            <button id="btnTONConnect" class="absolute left-1/2 transform -translate-x-1/2 bottom-[20px] px-2 py-1 rounded-md text-sm sm:text-base md:text-lg lg:text-xl">
+                Kết nối Ví
+            </button>
+        </div>
+    </div>
+</div>
+
+

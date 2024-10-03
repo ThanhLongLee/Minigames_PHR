@@ -1,0 +1,31 @@
+﻿
+/*.bg-gradient-to-t {
+    background: radial-gradient(circle, #101b48 0%, #7198df 100%);
+}*/
+
+.bg_image {
+    background-image: url(https://static.wixstatic.com/media/c25106_bbee236327a444d19b0b026634d279c2~mv2.png);
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.title {
+    font-size: 25px;
+    font-weight: bold;
+    color: #f4da33;
+}
+
+.content-soon {
+    text-transform: none !important;
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: bold;
+}
+
+soon-img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-top: 20px;
+}

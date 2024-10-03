@@ -1,0 +1,30 @@
+﻿.title {
+    font-size: 25px;
+    font-weight: bold;
+    color: #f4da33;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/*.bg-gradient-to-t {
+    background: radial-gradient(circle, #101b48 0%, #7198df 100%);
+}*/
+
+.bg_image {
+    background-image: url(https://static.wixstatic.com/media/c25106_bbee236327a444d19b0b026634d279c2~mv2.png);
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.clicked {
+    transition: all 0.3s ease; /* Thay đổi mượt mà trong 0.3 giây */
+}
+
+    .clicked:hover {
+        transform: scale(1.1); /* Tăng kích thước ảnh khi hover */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Thêm bóng đổ khi hover */
+        cursor: pointer; /* Thay đổi con trỏ chuột khi hover */
+    }
+
+

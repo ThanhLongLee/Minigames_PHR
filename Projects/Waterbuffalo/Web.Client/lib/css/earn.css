@@ -1,0 +1,52 @@
+﻿.title {
+    font-size: 25px;
+    font-weight: bold;
+    color: #f4da33;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/*.bg-gradient-to-t {
+    background: radial-gradient(circle, #101b48 0%, #7198df 100%);
+}*/
+
+.bg_image {
+    background-image: url(https://static.wixstatic.com/media/c25106_bbee236327a444d19b0b026634d279c2~mv2.png);
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.gradient-background {
+    position: relative;
+    background:#7198df;
+    border: none;
+    z-index: 0;
+    border-radius: 10px;
+}
+
+
+/*gradient-background {
+    position: relative;
+    border: 2px solid rgb(153, 130, 0);*/ /* Đặt border cho phần tử */
+    /*z-index: 0;*/ /* Đặt lớp nền ở phía sau nội dung */
+/*}
+
+.gradient-background::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(7, 12, 25, 1);
+    opacity: 0.5;
+    z-index: -1;
+    border: inherit;
+    border-radius: inherit;
+}*/
+
+.content {
+    position: relative;
+    z-index: 1;
+}
